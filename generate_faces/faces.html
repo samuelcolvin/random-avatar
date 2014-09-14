@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+    #face {
+      height: 500px;
+      width: 500px;
+    }
+    </style>
+  </head>
+  <body >
+    <div id="face"></div>
+    <button id="stop">Stop/start</button>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="faces.js"></script>
+    <script>
+      var go = true;
+      function gen_face(){
+        if (!go)
+          return;
+        faces.generate('face');
+        var svgtext = $('#face').html();
+        $.post('/svg', svgtext, gen_face).fail(function(data) {
+          console.log('save failed: ', data.responseText);
+          go = false;
+        });
+      }
+      gen_face();
+
+      $('#stop').click(function(){
+        go = !go;
+        if (go)
+          gen_face();
+      });
+    </script>
+  </body>
+</html>
