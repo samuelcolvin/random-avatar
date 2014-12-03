@@ -5,6 +5,7 @@ import datetime
 from string import digits, ascii_uppercase
 from avatar_generator import Avatar
 
+THIS_DIR = os.path.dirname(__file__)
 
 class AvatarGenerator(Avatar):
     @staticmethod
@@ -19,8 +20,10 @@ class AvatarGenerator(Avatar):
 
 
 def get_data():
-    this_dir = os.path.dirname(__file__)
-    return json.load(open(os.path.join(this_dir, 'random_data.json'), 'r'))
+    return json.load(open(os.path.join(THIS_DIR, 'random_data.json'), 'r'))
+
+def get_paragraphs():
+    return json.load(open(os.path.join(THIS_DIR, 'paragraphs.json'), 'r'))
 
 
 class UserGenerator(object):
@@ -41,7 +44,7 @@ class UserGenerator(object):
     def generate_user(self):
         """
         Generates user information for display.
-        :return: A dictionary of user informations. Such as: Avatar, Biography, E-mail, First name, Second name,
+        :return: A dictionary of user informations. Such as: Avatar, E-mail, First name, Second name,
         Full name, Gender, Birth date, Mobile number, Phone number, Postcode, Country, Town, Street
         """
         gender = random.choice([1, 2])
@@ -54,7 +57,6 @@ class UserGenerator(object):
 
         return {
             'avatar': AvatarGenerator().generate(128, first_name[0] + second_name[0]),
-            'biography': self._get_bio(),
             'email': self.contaminant + email,
             'first_name': first_name,
             'second_name': second_name,
@@ -69,12 +71,6 @@ class UserGenerator(object):
             'street': str(random.randint(1, 300)) + ' ' + random.choice(self.streets),
             'town': random.choice(self.cities)
         }
-
-    def _get_bio(self):
-        biography = ''
-        for i in random.sample(range(len(self.sentences)), 3):
-            biography += ' ' + self.sentences[i]
-        return biography.strip()
 
     def _get_name(self, gender, depth=0):
         random.seed()
